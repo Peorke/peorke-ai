@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#b89a6a">
+<title>بيوركي AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#b89a6a;--panel:#e9d8b6;--ink:#2b1d0e;--me:#5a3b1c;--meink:#fff;--bot:#fff6e2;--ac:#7a4f24;--line:#8a6a3c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#241a0e;--panel:#35271a;--ink:#f3e6cc;--me:#c08a4c;--meink:#1d1307;--bot:#463420;--ac:#d9a45f;--line:#6a4f2c}}
+:root[data-theme="dark"]{--bg:#241a0e;--panel:#35271a;--ink:#f3e6cc;--me:#c08a4c;--meink:#1d1307;--bot:#463420;--ac:#d9a45f;--line:#6a4f2c}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Tajawal,system-ui,sans-serif;font-size:16px;overflow:hidden}
+#app{height:100%;display:flex;flex-direction:column;max-width:720px;margin:auto}
+header{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--panel);border-bottom:3px solid var(--line)}
+#av{width:52px;height:52px;image-rendering:pixelated;border:3px solid var(--line);flex:none;animation:fl 3s ease-in-out infinite}
+#av.blink{animation:fl 3s ease-in-out infinite,bl .18s}
+#av.think{animation:th .5s ease-in-out infinite}
+#av.talk{animation:tk .28s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-4px) rotate(2deg)}}
+@keyframes bl{50%{filter:brightness(.55)}}
+@keyframes th{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) scale(1.05)}}
+@keyframes tk{50%{transform:scale(1.1,.94)}}
+h1{font:11px/1.4 "Press Start 2P",monospace;margin:0;flex:1}
+h1 small{display:block;font:12px Tajawal,sans-serif;opacity:.7;margin-top:4px}
+button,select{font:inherit;color:var(--ink);background:var(--bot);border:2px solid var(--line);padding:6px 10px;cursor:pointer;border-radius:0}
+button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+#log{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:85%;padding:10px 12px;white-space:pre-wrap;line-height:1.7;border:2px solid var(--line)}
+.b{background:var(--bot);align-self:flex-start}
+.u{background:var(--me);color:var(--meink);align-self:flex-end}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:6px 12px}
+.chips button{white-space:nowrap;background:var(--panel)}
+form,.row{display:flex;gap:8px;padding:8px 12px 12px}
+textarea{flex:1;resize:none;font:inherit;color:var(--ink);background:var(--bot);border:2px solid var(--line);padding:8px;height:46px;border-radius:0}
+#send{background:var(--ac);color:var(--bg);font-weight:700}
+#side{position:fixed;inset:0;background:#000a;display:none;z-index:5}
+#side.on{display:block}
+#sp{width:min(300px,85%);height:100%;background:var(--panel);padding:calc(12px + env(safe-area-inset-top,0px)) 12px 12px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.ci{display:flex;gap:6px}.ci button:first-child{flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ci.cur button:first-child{background:var(--ac);color:var(--bg)}
+@media(prefers-reduced-motion:reduce){#av{animation:none!important}}
+</style></head><body><div id="app">
+<header>
+<button id="menu" aria-label="المحادثات">☰</button>
+<img id="av" alt="بيوركي" src="data:image/jpeg;base64,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">
+<h1>PEORKE AI<small id="st">مدير أعمالك جاهز</small></h1>
+<select id="snd" aria-label="صوت التنبيه"><option value="0">صوت: بلوك</option><option value="1">صوت: جرس</option><option value="2">صوت: عملة</option></select>
+</header>
+<div id="log" aria-live="polite"></div>
+<div class="chips"><button data-q="اختار لي">🎲 اختار لي</button><button data-q="فكرة فيديو">💡 فكرة فيديو</button><button data-q="عنوان">🏷️ عنوان</button><button data-q="تذكيراتي">⏰ تذكيراتي</button></div>
+<div class="row"><textarea id="in" rows="1" placeholder="اكتب: ذكرني بالتصوير بكرة الساعة 8 مساء"></textarea><button id="send">أرسل</button></div>
+</div>
+<div id="side"><div id="sp"><button id="new">＋ محادثة جديدة</button><div id="list" style="display:flex;flex-direction:column;gap:6px"></div></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const S={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const LN=(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())?Capacitor.Plugins.LocalNotifications:null;
+let chats=S.get('pk_chats',[]),cur=S.get('pk_cur',null),rem=S.get('pk_rem',[]),busy=false;
+const log=$('#log'),av=$('#av'),st=$('#st');
+$('#snd').value=S.get('pk_snd',0);$('#snd').onchange=e=>{S.set('pk_snd',+e.target.value);beep(+e.target.value)};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const AD=s=>s.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+const IDEAS=['هاردكور بدون ما أنام أول ليلة','أصعب مود هاردكور جربته: كم أعيش؟','شرح مود جديد خلال 5 دقائق','تحدي: أنهي اللعبة بدون أدوات حديد','أفضل 5 مودات هاردكور هذا الشهر','باك بيوركي: كل اللي تحتاجه في فيديو واحد','شرح تثبيت المودات للمبتدئين خطوة خطوة','هاردكور مع مود رعب: هل أنجو؟'];
+const TITLES=['عشت 100 يوم هاردكور بهذا المود… وصار شي ما توقعته','هاردكور لكن المود يبي يقتلني!','أقوى باك بيوركي: طريقة التحميل والشرح','لا تنزل هذا المود قبل تشوف الفيديو','كيف تركّب المودات بدقيقتين؟'];
+const CH=['اختر فيديو اليوم: ','أنا أشوف الأفضل: '];
+function now(){return new Date()}
+function fmt(d){return d.toLocaleString('ar',{weekday:'long',hour:'numeric',minute:'2-digit'})}
+function parseWhen(t){t=AD(t);const n=now();let m;
+ if(m=t.match(/بعد\s*(\d+)?\s*(دقيقتين|دقيق[ةه]|دقائق|ساعتين|ساعتان|ساع[ةه]|ساعات)/)){const k=m[1]?+m[1]:(/تين|تان/.test(m[2])?2:1);const min=/دقيق|دقائق/.test(m[2])?k:k*60;return{d:new Date(+n+min*6e4),rest:t.replace(m[0],'')}}
+ if(m=t.match(/الساع[ةه]\s*(\d{1,2})(?::(\d{2}))?(?:\s*(مساء|صباحا|صباح|عصر|ظهر|ليل|ص|م)(?![\u0621-\u064A]))?/)){
+  let h=+m[1],mi=+(m[2]||0),p=m[3]||'';
+  if(/^(م|مساء|عصر|ليل)/.test(p)&&h<12)h+=12;else if(!p&&h<7)h+=12;
+  const day=/بكر[ةه]|غدا|غداً/.test(t)?1:0;const d=new Date(n);d.setDate(d.getDate()+day);d.setHours(h,mi,0,0);
+  if(d<=n&&!day)d.setDate(d.getDate()+1);
+  return{d,rest:t.replace(m[0],'')}}
+ return null}
+function reply(text){
+ if(/اختار|احتار|حيرني/.test(text)){const o=text.replace(/اختار لي|اختر لي/,'').split(/[،,]| أو /).map(s=>s.trim()).filter(Boolean);
+  return pick(CH)+(o.length>1?pick(o):pick(IDEAS))+'\n\nقراري نهائي، ابدأ الحين!'}
+ if(/تذكيرات|تنبيهات/.test(text)){const a=rem.filter(r=>!r.done);return a.length?'تنبيهاتك القادمة:\n'+a.map(r=>'• '+r.t+' — '+fmt(new Date(r.at))).join('\n'):'ما عندك تنبيهات. جرّب: ذكرني بالتصوير الخميس الساعة 6 مساء'}
+ if(/ذكرني|ذكّرني|نبهني|نبّهني|اضبط|ضبط/.test(text)){
+  const w=parseWhen(text);if(!w)return'ما فهمت الوقت. اكتب مثل: «الساعة 8 مساء» أو «بعد ساعتين» أو «بكرة الساعة 5».';
+  const t=w.rest.replace(/ذكرني|ذكّرني|نبهني|نبّهني|اضبط لي|اضبط|ضبط|بكر[ةه]|غدا|غداً/g,' ').replace(/\s+/g,' ').trim().replace(/^(ب|في|ان|أن)(?=\s|$)\s*/,'').replace(/^ب(?=[\u0621-\u064A]{3})/,'').trim()||'تنبيه';
+  rem.push({id:Date.now(),t,at:+w.d});S.set('pk_rem',rem);
+  if(LN)LN.requestPermissions().then(()=>LN.schedule({notifications:[{id:Math.floor(Date.now()/1000)%2147483647,title:'بيوركي AI',body:t,schedule:{at:w.d,allowWhileIdle:true}}]})).catch(()=>{});
+  if('Notification' in window&&Notification.permission==='default')try{Notification.requestPermission()}catch(e){}
+  return'تم ✅ بذكّرك: «'+t+'»\nالوقت: '+fmt(w.d)+''+(LN?'\nراح يرن حتى لو التطبيق مقفول.':'\n(خلّ التطبيق مفتوح عشان يرن)')}
+ if(/عنوان|عناوين/.test(text))return'عنوان مقترح:\n«'+pick(TITLES)+'»'
+ if(/فكر|أفكار|افكار|فيديو/.test(text))return'فكرة فيديو:\n• '+pick(IDEAS)+'\n\nتبيني أحوّلها لمهمة وتنبيه؟'
+ if(/مرحب|هلا|السلام|اهلا|أهلا/.test(text))return'هلا والله! أنا بيوركي AI، مدير أعمال قناتك. اسألني عن أفكار، عناوين، أو خلّني أذكّرك بمواعيدك.'
+ return'فهمت. أقدر أساعدك في:\n• أفكار فيديو (هاردكور، مودات، شروحات)\n• عناوين\n• «اختار لي»\n• تنبيهات: «ذكرني بـ… الساعة 8 مساء»\n\nالنموذج الذكي الكامل يجي في الخطوة الجاية.'}
+function C(){let c=chats.find(x=>x.id===cur);if(!c){c={id:Date.now(),title:'محادثة جديدة',msgs:[{r:'b',t:'هلا! أنا بيوركي AI، مدير أعمال قناتك. وش نسوي اليوم؟'}]};chats.unshift(c);cur=c.id;save()}return c}
+function save(){S.set('pk_chats',chats);S.set('pk_cur',cur)}
+function add(r,t,anim){const d=document.createElement('div');d.className='m '+r;log.appendChild(d);
+ if(!anim){d.textContent=t;log.scrollTop=log.scrollHeight;return Promise.resolve()}
+ av.className='talk';st.textContent='يتكلم…';let i=0;return new Promise(res=>{const iv=setInterval(()=>{d.textContent=t.slice(0,++i);log.scrollTop=log.scrollHeight;if(i>=t.length){clearInterval(iv);av.className='';st.textContent='مدير أعمالك جاهز';res()}},18)})}
+function render(){log.innerHTML='';C().msgs.forEach(m=>add(m.r,m.t,false));renderList()}
+function renderList(){const l=$('#list');l.innerHTML='';chats.forEach(c=>{const d=document.createElement('div');d.className='ci'+(c.id===cur?' cur':'');
+ const a=document.createElement('button');a.textContent=c.title;a.onclick=()=>{cur=c.id;save();render();$('#side').classList.remove('on')};
+ const x=document.createElement('button');x.textContent='🗑';x.setAttribute('aria-label','حذف');x.onclick=()=>{chats=chats.filter(z=>z.id!==c.id);if(cur===c.id)cur=null;save();render()};
+ d.append(a,x);l.appendChild(d)})}
+async function send(text){text=text.trim();if(!text||busy)return;busy=true;const c=C();
+ c.msgs.push({r:'u',t:text});if(c.title==='محادثة جديدة')c.title=text.slice(0,28);save();await add('u',text,false);renderList();
+ av.className='think';st.textContent='يفكر…';await new Promise(r=>setTimeout(r,700));
+ const out=reply(text);c.msgs.push({r:'b',t:out});save();await add('b',out,true);busy=false}
+$('#send').onclick=()=>{const v=$('#in').value;$('#in').value='';send(v)};
+$('#in').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#send').click()}};
+document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>send(b.dataset.q));
+$('#menu').onclick=()=>$('#side').classList.add('on');
+$('#side').onclick=e=>{if(e.target.id==='side')$('#side').classList.remove('on')};
+$('#new').onclick=()=>{cur=null;C();render();$('#side').classList.remove('on')};
+let ac;function beep(k){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const seq=[[[220,.08],[165,.12]],[[880,.15],[1320,.3]],[[988,.08],[1319,.35]]][k];let t=ac.currentTime;seq.forEach(([f,d])=>{const o=ac.createOscillator(),g=ac.createGain();o.type=k===0?'square':'sine';o.frequency.value=f;g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+d);t+=d})}catch(e){}}
+setInterval(()=>{const n=+now();rem.forEach(r=>{if(!r.done&&r.at<=n){r.done=true;S.set('pk_rem',rem);beep(+$('#snd').value);
+ try{if(!LN&&Notification.permission==='granted')new Notification('بيوركي AI',{body:r.t})}catch(e){}
+ const c=C();const t='⏰ تذكير: '+r.t;c.msgs.push({r:'b',t});save();add('b',t,false)}})},3000);
+setInterval(()=>{av.classList.add('blink');setTimeout(()=>av.classList.remove('blink'),200)},4000);
+render();
+</script></body></html>
